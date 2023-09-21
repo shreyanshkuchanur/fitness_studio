@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add your CSS styles here -->
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+        }
+
+        .card__inner {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .card:hover .card__inner {
+            transform: rotateY(180deg);
+        }
+
+        .card__front,
+        .card__back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        .card__back {
+            transform: rotateY(180deg);
+            background-color: #f5f5f5;
+        }
+
+        .heading-secondary {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form__group {
+            margin-bottom: 20px;
+        }
+
+        .form__input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            align-items: center;
+            
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .card__toggle {
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+    <title>Login - Outdoors</title>
+</head>
+<body>
+    <div class="card">
+        <div class="card__inner">
+            <div class="card__front">
+                <h2 class="heading-secondary">Login</h2>
+                <form id="login-form" class="form">
+                    <!-- Login form fields here -->
+                    <div class="form__group">
+                        <input
+                            type="email"
+                            class="form__input"
+                            placeholder="Email Address"
+                            id="login-email"
+                            required
+                        />
+                        <label for="login-email" class="form__label">Email Address</label>
+                    </div>
+                    <div class="form__group">
+                        <input
+                            type="password"
+                            class="form__input"
+                            placeholder="Password"
+                            id="login-password"
+                            required
+                        />
+                        <label for="login-password" class="form__label">Password</label>
+                    </div>
+                    <button type="submit" class="btn btn--green">Login</button>
+                </form>
+                <p class="card__toggle">Don't have an account? <span id="toggle-signup">Sign Up</span></p>
+            </div>
+            <div class="card__back">
+                <h2 class="heading-secondary">Sign Up</h2>
+                <form id="signup-form" class="form">
+                    <!-- Signup form fields here -->
+                    <div class="form__group">
+                        <input
+                            type="email"
+                            class="form__input"
+                            placeholder="Email Address"
+                            id="signup-email"
+                            required
+                        />
+                        <label for="signup-email" class="form__label">Email Address</label>
+                    </div>
+                    <div class="form__group">
+                        <input
+                            type="password"
+                            class="form__input"
+                            placeholder="Password"
+                            id="signup-password"
+                            required
+                        />
+                        <label for="signup-password" class="form__label">Password</label>
+                    </div>
+                    <button type="submit" class="btn btn--green">Sign Up</button>
+                </form>
+                <p class="card__toggle">Already have an account? <span id="toggle-login">Login</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Firebase SDK and initialize Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script>
+        // Your Firebase project configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBTnx6TjG4pHz49gb7chuEcUYq9T8YmZl8",
+          authDomain: "kratos-studio.firebaseapp.com",
+          projectId: "kratos-studio",
+          storageBucket: "kratos-studio.appspot.com",
+          messagingSenderId: "274771839613",
+          appId: "1:274771839613:web:8a50fb18afb9bd4fb47f14",
+          measurementId: "G-D67544HBYR"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <!-- Include your JavaScript code -->
+    <script>
+        // JavaScript code here
+        const toggleLogin = document.getElementById('toggle-login');
+        const toggleSignup = document.getElementById('toggle-signup');
+        const cardInner = document.querySelector('.card__inner');
+
+        toggleLogin.addEventListener('click', () => {
+            cardInner.style.transform = 'rotateY(0deg)';
+        });
+
+        toggleSignup.addEventListener('click', () => {
+            cardInner.style.transform = 'rotateY(180deg)';
+        });
+
+        // Add your login and signup form submit event listeners here
+        const loginForm = document.getElementById('login-form');
+        const emailInput = document.getElementById('login-email');
+        const passwordInput = document.getElementById('login-password');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent form submission
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            // Sign in the user with Firebase authentication
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // User signed in successfully
+                    const user = userCredential.user;
+                    console.log('User signed in:', user);
+
+                    // Example redirect (replace with your own logic)
+                    window.location.href = 'main_project.html';
+                })
+                .catch((error) => {
+                    // Handle login errors
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error('Login error:', errorCode, errorMessage);
+                    // Display error message to the user
+                    alert(errorMessage);
+                });
+        });
+
+        const signupForm = document.getElementById('signup-form');
+        const signupEmailInput = document.getElementById('signup-email');
+        const signupPasswordInput = document.getElementById('signup-password');
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent form submission
+
+            const email = signupEmailInput.value;
+            const password = signupPasswordInput.value;
+
+            // Create a new user with Firebase authentication
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // User signed up successfully
+                    const user = userCredential.user;
+                    console.log('User signed up:', user);
+
+                    // Example redirect (replace with your own logic)
+                    window.location.href = 'main_project.html';
+                })
+                .catch((error) => {
+                    // Handle signup errors
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error('Signup error:', errorCode, errorMessage);
+                    // Display error message to the user
+                    alert(errorMessage);
+                });
+        });
+    </script>
+</body>
+</html>

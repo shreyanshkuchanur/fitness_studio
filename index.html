@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add your CSS and other meta tags as needed -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+    <title>Login - Outdoors</title>
+    
+    <!-- Add Firebase SDK initialization script (same as in index.html) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    
+    <!-- Your Firebase configuration script (same as in index.html) -->
+    <script>
+        // Your Firebase project configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyBTnx6TjG4pHz49gb7chuEcUYq9T8YmZl8",
+        authDomain: "kratos-studio.firebaseapp.com",
+        projectId: "kratos-studio",
+        storageBucket: "kratos-studio.appspot.com",
+        messagingSenderId: "274771839613",
+        appId: "1:274771839613:web:8a50fb18afb9bd4fb47f14",
+        measurementId: "G-D67544HBYR"
+    };
+
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+</head>
+<body>
+    <!-- Redirection script -->
+    <script>
+        // Check if the user is logged in
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in, redirect to main_project.html
+                window.location.href = 'main_project.html';
+            } else {
+                // User is not signed in, show login form
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>
